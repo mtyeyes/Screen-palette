@@ -1,0 +1,7 @@
+:root {
+    --screen-light: hsl(300,80%,60%);
+}
+
+body {
+    background-color: var(--screen-light);
+}
