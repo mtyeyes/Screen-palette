@@ -80,13 +80,13 @@ document.addEventListener('keydown', function(event) {
     }
 });
 
-document.addEventListener ('pointerdown', function (event) {
-    touchStartX = event.clientX;
-    touchStartY = event.clientY;
+document.addEventListener ('touchstart', function (event) {
+    touchStartX = event.changedTouches[0].screenX;
+    touchStartY = event.changedTouches[0].screenY;
 });
 
-document.addEventListener ('pointerup', function (event) {
-    touchEndX = event.clientX;
-    touchEndY = event.clientY;
+document.addEventListener ('touchend', function (event) {
+    touchEndX = event.changedTouches[0].screenX;
+    touchEndY = event.changedTouches[0].screenY;
     swipe ();
 });
