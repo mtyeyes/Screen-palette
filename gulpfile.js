@@ -13,6 +13,11 @@ gulp.task("html", function () {
   .pipe(gulp.dest("build"));
 });
 
+gulp.task("manifest", function () {
+  return gulp.src("source/manifest.json")
+  .pipe(gulp.dest("build"));
+});
+
 gulp.task("css", function () {
   return gulp.src("source/css/style.css")
   .pipe(plumber())
@@ -41,6 +46,6 @@ gulp.task("copy", function (){
   .pipe(gulp.dest("build"));
 });
 
-gulp.task("build", gulp.series("clean", "copy", "css", "scripts", "html"));
+gulp.task("build", gulp.series("clean", "copy", "css", "scripts", "html", "manifest"));
 
 gulp.task("start", gulp.series("build"));
