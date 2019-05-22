@@ -1,17 +1,23 @@
 :root {
-    --screen-light: hsl(300,80%,60%);
+  --screen-light: hsl(210, 100%, 60%);
 }
 
 body {
-    background-color: var(--screen-light);
+  background-color: var(--screen-light);
+}
+
+img {
+  width: 70px;
+  height: 70px;
 }
 
 .help__btn {
   position: absolute;
-  top: 50px;
-  right: 50px;
+  top: 20px;
+  right: 20px;
   padding: 0;
   border: none;
-  opacity: 0,5;
+  opacity: 0.5;
   cursor: pointer;
+  background: none;
 }
