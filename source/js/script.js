@@ -10,14 +10,15 @@ if ('serviceWorker' in navigator) {
   });
 };
 
-let touchStartX;
-let touchStartY;
-let touchEndX;
-let touchEndY;
+var touchStartX;
+var touchStartY;
+var touchEndX;
+var touchEndY;
+var btnHold;
 
 function getColor () {
-  let hslColor = window.getComputedStyle(document.documentElement).getPropertyValue('--screen-light');
-  let hslArr = hslColor.split(',');
+  var hslColor = window.getComputedStyle(document.documentElement).getPropertyValue('--screen-light');
+  var hslArr = hslColor.split(',');
   hslArr[0] = hslArr[0].replace('hsl(', '');
   hslArr[1] = hslArr[1].replace('%', '');
   hslArr[2] = hslArr[2].replace('%)', '');
@@ -49,11 +50,16 @@ function setLightness (changeLightness) {
   if (((+hslArr[2] + +changeLightness) > 100) || ((+hslArr[2] + +changeLightness) < 0)) { return };
   desiredColor = 'hsl(' + hslArr[0] + ',' + hslArr[1] + '%,' + (+hslArr[2] + +changeLightness) +'%)';
   document.documentElement.style.setProperty('--screen-light', desiredColor);
+  if ((+hslArr[2] + +changeLightness) <= 30) {
+    document.documentElement.style.setProperty('--secondary-color', 'hsl(0, 0%, 73%)');
+  } else {
+    document.documentElement.style.setProperty('--secondary-color', 'hsl(44, 10%, 13%)');
+  };
 }
 
 function swipe () {
-  let XOffset = touchEndX - touchStartX;
-  let YOffset = touchEndY - touchStartY;
+  var XOffset = touchEndX - touchStartX;
+  var YOffset = touchEndY - touchStartY;
   if ((Math.abs(XOffset) < 100) && (Math.abs(YOffset) < 100)) { return };
   if ((Math.abs(XOffset)) > (Math.abs(YOffset))) {
       if (XOffset > 0) {
@@ -70,19 +76,30 @@ function swipe () {
   }
 }
 
+function hideBtn () {
+  document.querySelector('.help__btn').classList.toggle('help__btn--invisible');
+};
+
 document.addEventListener('keydown', function(event) {
-  if (event.code == 'ArrowRight') {
-      setHue (30);
-  } else if (event.code == 'ArrowLeft') {
+  switch (event.code) {
+    case 'ArrowRight':
+      setHue(30);
+      break;
+    case 'ArrowLeft':
       setHue (-30);
-  } else if (event.code == 'KeyZ') {
+      break;
+    case 'KeyZ':
       setSaturation (10);
-  } else if (event.code == 'KeyX') {
+      break;
+    case 'KeyX':
       setSaturation (-10);
-  } else if (event.code == 'ArrowUp') {
+      break;
+    case 'ArrowUp':
       setLightness (10);
-  } else if (event.code == 'ArrowDown') {
+      break;
+    case 'ArrowDown':
       setLightness (-10);
+      break;
   }
 });
 
@@ -95,4 +112,26 @@ document.addEventListener ('touchend', function (event) {
   touchEndX = event.changedTouches[0].screenX;
   touchEndY = event.changedTouches[0].screenY;
   swipe ();
+});
+
+document.querySelector('.help__btn').addEventListener('click', function (event) {
+  event.stopPropagation();
+  event.preventDefault;
+  document.querySelector('.help__container').classList.toggle('help__container--closed');
+});
+
+document.querySelector('.help__btn').addEventListener('mousedown', function (event) {
+  btnHold = setTimeout (hideBtn, 2000);
+});
+
+document.querySelector('.help__btn').addEventListener('mouseup', function (event) {
+  clearTimeout(btnHold);
+});
+
+document.querySelector('.help__btn').addEventListener('touchstart', function (event) {
+  btnHold = setTimeout (hideBtn, 2000);
+});
+
+document.querySelector('.help__btn').addEventListener('touchend', function (event) {
+  clearTimeout(btnHold);
 });

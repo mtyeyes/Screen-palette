@@ -1,14 +1,11 @@
 :root {
   --screen-light: hsl(210, 100%, 60%);
+  --secondary-color: hsl(44, 10%, 13%);
 }
 
-body {
+.lamp {
   background-color: var(--screen-light);
-}
-
-img {
-  width: 70px;
-  height: 70px;
+  overscroll-behavior-y: contain;
 }
 
 .help__btn {
@@ -20,4 +17,54 @@ img {
   opacity: 0.5;
   cursor: pointer;
   background: none;
+}
+
+.help__btn--invisible {
+  opacity: 0.00000001;
+}
+
+.help__container {
+  margin: 150px auto 0;
+  width: 90vw;
+  color: var(--secondary-color);
+  font-size: 20px;
+  text-align: center;
+  border: 5px solid var(--secondary-color);
+  border-radius: 20%;
+}
+
+.help__container--closed {
+  display: none;
+}
+
+.help__list {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  list-style: none;
+  padding: 0;
+}
+
+.help__item {
+  position: relative;
+  padding: 20px;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.help__instructions--desktop {
+  display: none;
+}
+
+@media (min-width: 700px) {
+  .help__container {
+    margin: 30vh auto 0;
+    width: 500px;
+  }
+}
+
+@media (min-width: 1200px) {
+  .help__instructions--desktop {
+    display: inline;
+  }
 }

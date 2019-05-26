@@ -24,6 +24,6 @@
           "type": "image/png"
         }],
     "background_color": "#ea47ea",
-    "display": "standalone",
+    "display": "fullscreen",
     "theme_color": "#21252B"
   }
