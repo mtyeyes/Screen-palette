@@ -19,7 +19,7 @@
   background: none;
 }
 
-.help__btn--invisible {
+.help__btn--hide {
   opacity: 0.00000001;
 }
 

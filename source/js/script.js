@@ -14,7 +14,9 @@ var touchStartX;
 var touchStartY;
 var touchEndX;
 var touchEndY;
+var helpBtn = document.querySelector('.help__btn');
 var btnHold;
+var isLongPress;
 
 function getColor () {
   var hslColor = window.getComputedStyle(document.documentElement).getPropertyValue('--screen-light');
@@ -76,9 +78,26 @@ function swipe () {
   }
 }
 
+function showHelp () {
+  event.preventDefault;
+  document.querySelector('.help__container').classList.toggle('help__container--closed');
+}
+
 function hideBtn () {
-  document.querySelector('.help__btn').classList.toggle('help__btn--invisible');
+  helpBtn.classList.toggle('help__btn--hide');
+  isLongPress = true;
 };
+
+function btnReleased () {
+  clearTimeout(btnHold);
+  function returnListener () {
+    helpBtn.addEventListener('click', showHelp);
+  }
+  if (isLongPress) {
+    helpBtn.removeEventListener ('click', showHelp);
+    shortTimeout = setTimeout (returnListener, 100);
+  };
+}
 
 document.addEventListener('keydown', function(event) {
   switch (event.code) {
@@ -114,24 +133,22 @@ document.addEventListener ('touchend', function (event) {
   swipe ();
 });
 
-document.querySelector('.help__btn').addEventListener('click', function (event) {
-  event.stopPropagation();
-  event.preventDefault;
-  document.querySelector('.help__container').classList.toggle('help__container--closed');
-});
+helpBtn.addEventListener('click', showHelp);
 
-document.querySelector('.help__btn').addEventListener('mousedown', function (event) {
+helpBtn.addEventListener('mousedown', function (event) {
+  isLongPress = false;
   btnHold = setTimeout (hideBtn, 2000);
 });
 
-document.querySelector('.help__btn').addEventListener('mouseup', function (event) {
-  clearTimeout(btnHold);
+helpBtn.addEventListener('mouseup', function (event) {
+  btnReleased ();
 });
 
-document.querySelector('.help__btn').addEventListener('touchstart', function (event) {
+helpBtn.addEventListener('touchstart', function (event) {
+  isLongPress = false;
   btnHold = setTimeout (hideBtn, 2000);
 });
 
-document.querySelector('.help__btn').addEventListener('touchend', function (event) {
-  clearTimeout(btnHold);
+helpBtn.addEventListener('touchend', function (event) {
+  btnReleased ();
 });
