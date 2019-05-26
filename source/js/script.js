@@ -84,7 +84,7 @@ function showHelp () {
 }
 
 function hideBtn () {
-  helpBtn.classList.toggle('help__btn--hide');
+  document.querySelector('.help__icon').classList.toggle('help__icon--hide');
   isLongPress = true;
 };
 
