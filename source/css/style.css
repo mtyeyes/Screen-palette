@@ -19,7 +19,7 @@
 }
 
 .help__btn:active {
-  background-image: radial-gradient(circle at center, hsl(0, 0%, 73%, 1) 0%, hsl(0, 0%, 73%, 0) 70%);
+  background-image: radial-gradient(circle at center, hsl(0, 0%, 73%, 1) 0%, var(--screen-light) 70%);
 }
 
 .help__btn:focus {

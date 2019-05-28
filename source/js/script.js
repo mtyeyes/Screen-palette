@@ -40,13 +40,6 @@ function setHue (changeHue) {
   document.documentElement.style.setProperty('--screen-light', desiredColor);
 }
 
-function setSaturation (changeSaturation) {
-  hslArr = getColor ();
-  if (((+hslArr[1] + +changeSaturation) > 100) || ((+hslArr[1] + +changeSaturation) < 0)) { return };
-  desiredColor = 'hsl(' + hslArr[0] + ',' + (+hslArr[1] + +changeSaturation) + '%,' + hslArr[2] + '%)';
-  document.documentElement.style.setProperty('--screen-light', desiredColor);
-}
-
 function setLightness (changeLightness) {
   hslArr = getColor ();
   if (((+hslArr[2] + +changeLightness) > 100) || ((+hslArr[2] + +changeLightness) < 0)) { return };
@@ -62,7 +55,7 @@ function setLightness (changeLightness) {
 function swipe () {
   var XOffset = touchEndX - touchStartX;
   var YOffset = touchEndY - touchStartY;
-  if ((Math.abs(XOffset) < 100) && (Math.abs(YOffset) < 100)) { return };
+  if ((Math.abs(XOffset) < 70) && (Math.abs(YOffset) < 70)) { return };
   if ((Math.abs(XOffset)) > (Math.abs(YOffset))) {
       if (XOffset > 0) {
           setHue (30);
@@ -106,12 +99,6 @@ document.addEventListener('keydown', function(event) {
       break;
     case 'ArrowLeft':
       setHue (-30);
-      break;
-    case 'KeyZ':
-      setSaturation (10);
-      break;
-    case 'KeyX':
-      setSaturation (-10);
       break;
     case 'ArrowUp':
       setLightness (10);
