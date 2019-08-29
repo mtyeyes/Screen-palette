@@ -1,141 +1,257 @@
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', () => {
     navigator.serviceWorker.register('service-worker.js')
-    .then(registration => {
-      console.log('Service Worker is registered', registration);
-    })
     .catch(err => {
-      console.error('Registration failed:', err);
+      alert('There has been a problem with Service Worker registration. This application may require internet connection to function properly.');
     });
   });
 };
 
-var touchStartX;
-var touchStartY;
-var touchEndX;
-var touchEndY;
-var helpBtn = document.querySelector('.help__btn');
-var btnHold;
-var isLongPress;
+let touchStartX;
+let touchStartY;
+let touchEndX;
+let touchEndY;
+let chosenFavoriteColor;
+let helpBtn = document.querySelector('.help__btn');
+let helpContainer = document.querySelector('.help__container');
+let paletteBtn = document.querySelector('.palette__btn');
+let paletteContainer = document.querySelector('.palette__container');
+let sliders = document.querySelectorAll('.palette__slider')
+let favoriteColorContainers = document.querySelectorAll('.palette__favorite-color')
+let btnHold;
+let isLongPress;
 
-function getColor () {
-  var hslColor = window.getComputedStyle(document.documentElement).getPropertyValue('--screen-light');
-  var hslArr = hslColor.split(',');
-  hslArr[0] = hslArr[0].replace('hsl(', '');
-  hslArr[1] = hslArr[1].replace('%', '');
-  hslArr[2] = hslArr[2].replace('%)', '');
+hslStringToArr = (str) => {
+  hslArr = str.split(',');
+  hslArr[0] = +(hslArr[0].replace('hsl(', ''));
+  hslArr[1] = +(hslArr[1].replace('%', ''));
+  hslArr[2] = +(hslArr[2].replace('%)', ''));
   return hslArr;
-}
+};
 
+hslArrToString = (arr) => {
+  return 'hsl(' + arr[0] + ',' + arr[1] + '%,' + arr[2] + '%)';
+};
 
-function setHue (changeHue) {
-  hslArr = getColor ();
-  if ((+hslArr[0] + +changeHue) > 360) {
-    desiredColor = 'hsl(' + (+hslArr[0] + +changeHue - 360) + ',' + hslArr[1] + '%,' + hslArr[2] + '%)';
-  } else if ((+hslArr[0] + +changeHue) < 0) {
-    desiredColor = 'hsl(' + (+hslArr[0] + +changeHue + 360) + ',' + hslArr[1] + '%,' + hslArr[2] + '%)';
+getCustomProperty = (propertyName) => {
+  return window.getComputedStyle(document.documentElement).getPropertyValue(propertyName);
+};
+
+setCustomProperty = (propertyName, value) => {
+  document.documentElement.style.setProperty(propertyName, value);
+};
+
+setScreenColor = (str, lightness) => {
+  setCustomProperty('--screen-light', str);
+  localStorage.setItem('--screen-light', str);
+  if (typeof lightness === "undefined") {let lightness = str.slice((str.lastIndexOf(",") + 1)).replace('%)', '')};
+  if (lightness <= 30) {
+    setCustomProperty('--secondary-color', 'hsl(0, 0%, 73%)');
+    localStorage.setItem('--secondary-color', 'hsl(0, 0%, 73%)');
   } else {
-  desiredColor = 'hsl(' + (+hslArr[0] + +changeHue) + ',' + hslArr[1] + '%,' + hslArr[2] + '%)';
-  }
-  document.documentElement.style.setProperty('--screen-light', desiredColor);
-}
-
-function setLightness (changeLightness) {
-  hslArr = getColor ();
-  if (((+hslArr[2] + +changeLightness) > 100) || ((+hslArr[2] + +changeLightness) < 0)) { return };
-  desiredColor = 'hsl(' + hslArr[0] + ',' + hslArr[1] + '%,' + (+hslArr[2] + +changeLightness) +'%)';
-  document.documentElement.style.setProperty('--screen-light', desiredColor);
-  if ((+hslArr[2] + +changeLightness) <= 30) {
-    document.documentElement.style.setProperty('--secondary-color', 'hsl(0, 0%, 73%)');
-  } else {
-    document.documentElement.style.setProperty('--secondary-color', 'hsl(44, 10%, 13%)');
+    setCustomProperty('--secondary-color', 'hsl(44, 10%, 13%)');
+    localStorage.setItem('--secondary-color', 'hsl(44, 10%, 13%)');
   };
-}
+};
 
-function swipe () {
-  var XOffset = touchEndX - touchStartX;
-  var YOffset = touchEndY - touchStartY;
-  if ((Math.abs(XOffset) < 70) && (Math.abs(YOffset) < 70)) { return };
-  if ((Math.abs(XOffset)) > (Math.abs(YOffset))) {
-      if (XOffset > 0) {
-          setHue (30);
-      } else {
-          setHue (-30);
-      }
+synchronizeSliders = (hslArr) => {
+  sliders[0].value = hslArr[0];
+  sliders[1].value = hslArr[1];
+  sliders[2].value = hslArr[2];
+};
+
+changeHue = (difference) => {
+  hslArr = hslStringToArr(getCustomProperty('--screen-light'));
+  if ((hslArr[0] + difference) > 360) {
+    hslArr[0] = hslArr[0] + difference - 360;
+  } else if ((hslArr[0] + difference) < 0) {
+    hslArr[0] = hslArr[0] + difference + 360;
   } else {
-      if (YOffset > 0) {
-          setLightness (10);
-      } else {
-          setLightness (-10);
-      }
+    hslArr[0] = hslArr[0] + difference;
   }
+  resultedColor = hslArrToString(hslArr);
+  setScreenColor(resultedColor, hslArr[2]);
+  synchronizeSliders(hslArr);
+};
+
+changeLightness = (difference) => {
+  hslArr = hslStringToArr(getCustomProperty('--screen-light'));
+  if (((hslArr[2] + difference) > 100) || ((hslArr[2] + difference) < 0)) {
+    return
+  } else {
+    hslArr[2] = hslArr[2] + difference;
+  };
+  resultedColor = hslArrToString(hslArr);
+  setScreenColor(resultedColor, hslArr[2]);
+  synchronizeSliders(hslArr);
+};
+
+adjustColorsBySlider = () => {
+  let hslArr = [];
+  hslArr[0] = sliders[0].value;
+  hslArr[1] = sliders[1].value;
+  hslArr[2] = sliders[2].value;
+  resultedColor = hslArrToString(hslArr);
+  setScreenColor(resultedColor, hslArr[2]);
+  if (chosenFavoriteColor) {
+    setCustomProperty(chosenFavoriteColor, resultedColor)
+    localStorage.setItem(chosenFavoriteColor, resultedColor);
+  };
+};
+
+selectFavoriteColor = (element) => {
+  let hslString = getCustomProperty(element.dataset.propertyName);
+  let hslArr = hslStringToArr(hslString);
+  setScreenColor(hslString, hslArr[2]);
+  synchronizeSliders(hslArr);
+  chosenFavoriteColor = element.dataset.propertyName;
 }
 
-function showHelp () {
-  event.preventDefault;
-  document.querySelector('.help__container').classList.toggle('help__container--closed');
+toggleHelp = () => {
+  paletteContainer.classList.remove('palette__container--show');
+  helpContainer.classList.toggle('help__container--show');
+};
+
+togglePalette = () => {
+  helpContainer.classList.remove('help__container--show');
+  paletteContainer.classList.toggle('palette__container--show');
 }
 
-function hideBtn () {
+changeBtnsVisibility = () => {
   document.querySelector('.help__icon').classList.toggle('help__icon--hide');
+  document.querySelector('.palette__icon').classList.toggle('palette__icon--hide');
+  if (document.querySelector('.help__icon').classList.contains('help__icon--hide')) {
+    localStorage.setItem('hide-btns', true);
+  } else {
+    localStorage.removeItem('hide-btns');
+  }
   isLongPress = true;
 };
 
-function btnReleased () {
+btnReleased = (element) => {
   clearTimeout(btnHold);
-  function returnListener () {
-    helpBtn.addEventListener('click', showHelp);
-  }
-  if (isLongPress) {
-    helpBtn.removeEventListener ('click', showHelp);
-    shortTimeout = setTimeout (returnListener, 100);
+  if (!isLongPress) {
+    if (element === helpBtn) {
+      toggleHelp();
+    } else {
+      togglePalette();
+    }
   };
-}
+};
 
 document.addEventListener('keydown', function(event) {
   switch (event.code) {
     case 'ArrowRight':
-      setHue(30);
+      changeHue(30);
       break;
     case 'ArrowLeft':
-      setHue (-30);
+      changeHue (-30);
       break;
     case 'ArrowUp':
-      setLightness (10);
+      changeLightness (10);
       break;
     case 'ArrowDown':
-      setLightness (-10);
+      changeLightness (-10);
       break;
   }
 });
 
-document.addEventListener ('touchstart', function (event) {
+swipe = () => {
+  let XOffset = touchEndX - touchStartX;
+  let YOffset = touchEndY - touchStartY;
+  if ((Math.abs(XOffset) < 80) && (Math.abs(YOffset) < 80)) { return };
+  if ((Math.abs(XOffset)) > (Math.abs(YOffset))) {
+      if (XOffset > 0) {
+          changeHue(30);
+      } else {
+          changeHue(-30);
+      }
+  } else {
+      if (YOffset > 0) {
+          changeLightness(10);
+      } else {
+          changeLightness(-10);
+      }
+  }
+};
+
+document.addEventListener ('touchstart', function(event) {
   touchStartX = event.changedTouches[0].screenX;
   touchStartY = event.changedTouches[0].screenY;
 });
 
-document.addEventListener ('touchend', function (event) {
+document.addEventListener ('touchend', function(event) {
   touchEndX = event.changedTouches[0].screenX;
   touchEndY = event.changedTouches[0].screenY;
-  swipe ();
+  swipe();
 });
 
-helpBtn.addEventListener('click', showHelp);
-
-helpBtn.addEventListener('mousedown', function (event) {
+helpBtn.addEventListener('mousedown', function(event) {
   isLongPress = false;
-  btnHold = setTimeout (hideBtn, 2000);
+  btnHold = setTimeout(changeBtnsVisibility, 1300);
 });
 
-helpBtn.addEventListener('mouseup', function (event) {
-  btnReleased ();
-});
-
-helpBtn.addEventListener('touchstart', function (event) {
+helpBtn.addEventListener('touchstart', function(event) {
   isLongPress = false;
-  btnHold = setTimeout (hideBtn, 2000);
+  btnHold = setTimeout(changeBtnsVisibility, 1300);
 });
 
-helpBtn.addEventListener('touchend', function (event) {
-  btnReleased ();
+helpBtn.addEventListener('mouseup', function(event) {
+  btnReleased(event.currentTarget);
 });
+
+helpBtn.addEventListener('touchend', function(event) {
+  btnReleased(event.currentTarget);
+});
+
+paletteBtn.addEventListener('mousedown', function(event) {
+  isLongPress = false;
+  btnHold = setTimeout(changeBtnsVisibility, 1300);
+});
+
+paletteBtn.addEventListener('touchstart', function(event) {
+  isLongPress = false;
+  btnHold = setTimeout(changeBtnsVisibility, 1300);
+});
+
+paletteBtn.addEventListener('mouseup', function(event) {
+  btnReleased(event.currentTarget);
+});
+
+paletteBtn.addEventListener('touchend', function(event) {
+  btnReleased(event.currentTarget);
+});
+
+document.addEventListener('mouseup', function(event) {
+  clearTimeout(btnHold);
+});
+
+for (let element of sliders) {
+  element.addEventListener('input', function(event) {
+    adjustColorsBySlider();
+  });
+};
+
+for (let element of favoriteColorContainers) {
+  element.addEventListener('click', function(event) {
+    selectFavoriteColor(event.target)
+  });
+};
+
+( function() {
+  if (localStorage.getItem('--screen-light')) {
+    setCustomProperty('--screen-light', localStorage.getItem('--screen-light'));
+    setCustomProperty('--secondary-color', localStorage.getItem('--secondary-color'));
+    let hslArr = hslStringToArr(localStorage.getItem('--screen-light'));
+    synchronizeSliders(hslArr);
+  };
+  if (localStorage.getItem('hide-btns')) {
+    document.querySelector('.help__icon').classList.add('help__icon--hide');
+    document.querySelector('.palette__icon').classList.add('palette__icon--hide');
+  };
+  for (let element of favoriteColorContainers) {
+    if (localStorage.getItem(element.dataset.propertyName)) {
+      setCustomProperty(element.dataset.propertyName, localStorage.getItem(element.dataset.propertyName));
+    };
+  };
+}());
