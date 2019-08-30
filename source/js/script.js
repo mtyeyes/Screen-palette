@@ -163,6 +163,7 @@ document.addEventListener('keydown', function(event) {
 });
 
 swipe = () => {
+  if (paletteContainer.classList.contains('palette__container--show')) { return };
   let XOffset = touchEndX - touchStartX;
   let YOffset = touchEndY - touchStartY;
   if ((Math.abs(XOffset) < 80) && (Math.abs(YOffset) < 80)) { return };
