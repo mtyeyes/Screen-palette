@@ -3,6 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>Screen palette</title>
+    <meta name="Description" content="Application that turns your display into lamp of any color">
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="format-detection" content="telephone=no">
     <meta name="theme-color" content="#21252B">
@@ -28,20 +29,18 @@
       <button class="palette__btn" aria-label="Palette">
         <svg class="palette__icon" width="70" height="70" viewBox="0 0 70 70" fill="none" xmlns="http://www.w3.org/2000/svg">
           <path d="M67 35C67 52.0996 52.9184 66 35.5 66C18.0816 66 4 52.0996 4 35C4 17.9004 18.0816 4 35.5 4C52.9184 4 67 17.9004 67 35Z" stroke="var(--secondary-color,#1d2321)" stroke-width="5.61321"/>
-          <circle cx="38.5" cy="24.5" r="4.5" fill="var(--first-favorite-color,#ffffff)"/>
-          <circle cx="28.5" cy="24.5" r="4.5" fill="var(--second-favorite-color,#ffffff)"/>
-          <circle cx="22.5" cy="33.5" r="4.5" fill="var(--third-favorite-color,#ffffff)"/>
-          <circle cx="27.5" cy="41.5" r="4.5" fill="var(--fourth-favorite-color,#ffffff)"/>
+          <circle cx="38.5" cy="24.5" r="4.5" fill="var(--fourth-favorite-color,#ffffff)"/>
+          <circle cx="28.5" cy="24.5" r="4.5" fill="var(--third-favorite-color,#ffffff)"/>
+          <circle cx="22.5" cy="33.5" r="4.5" fill="var(--second-favorite-color,#ffffff)"/>
+          <circle cx="27.5" cy="41.5" r="4.5" fill="var(--first-favorite-color,#ffffff)"/>
           <path d="M48.8841 47.4347C48.8165 45.8612 46.4101 41.1825 46.4669 39.3669C46.5317 37.3083 47.7985 34.7728 50.4361 39.7294C52.0165 42.6998 54.4425 40.8515 54.7369 39.4062C55.6261 35.0342 54.3057 29.7902 50.1005 24.6519C42.8269 15.7659 30.0421 13.3256 21.5522 19.2018C13.0626 25.0789 12.8918 38.3128 20.639 45.9827C27.661 52.9323 37.3449 55.9868 45.4417 52.6374C46.2789 52.2895 49.0493 51.2236 48.8841 47.4347ZM26.141 21.6689C27.673 20.6086 29.7889 20.9691 30.8685 22.4757C31.9481 23.9819 31.5801 26.0622 30.0481 27.1225C28.515 28.1837 26.3994 27.8224 25.3198 26.3162C24.2402 24.8099 24.6074 22.7305 26.141 21.6689ZM19.5258 35.2225C18.447 33.7163 18.815 31.6361 20.347 30.5757C21.8782 29.5153 23.9958 29.8751 25.0746 31.3813C26.1542 32.8879 25.7854 34.9686 24.2542 36.0289C22.7222 37.0897 20.605 36.7303 19.5258 35.2225ZM35.9957 26.5418C34.9153 25.0356 35.2833 22.9546 36.8161 21.8942C38.3485 20.8339 40.4641 21.1948 41.5445 22.7014C42.6233 24.2072 42.2557 26.2871 40.7233 27.3482C39.1909 28.409 37.0749 28.0484 35.9957 26.5418ZM24.5178 43.735C23.439 42.2276 23.8058 40.1466 25.3378 39.0862C26.8702 38.0258 28.9874 38.3867 30.0661 39.8926C31.1449 41.3992 30.7781 43.4802 29.2457 44.5406C27.7138 45.6017 25.597 45.24 24.5178 43.735Z" fill="var(--secondary-color,#1d2321)"/>
         </svg>
       </button>
       <div class="palette__container">
         <div class="palette__sliders-wrapper">
-          <div class="palette__tranform-wrapper">
-            <input class="palette__slider" type="range" id="hueRange" name="hue" min="0" max="360">
-            <input class="palette__slider" type="range" id="saturationRange" name="saturation" min="0" max="100">
-            <input class="palette__slider" type="range" id="lightnessRange" name="lightness" min="0" max="100">
-          </div>
+          <input class="palette__slider" type="range" id="hueRange" name="hue" min="0" max="360">
+          <input class="palette__slider" type="range" id="saturationRange" name="saturation" min="0" max="100">
+          <input class="palette__slider" type="range" id="lightnessRange" name="lightness" min="0" max="100">
         </div>
         <div class="palette__favorite-colors">
           <button class="palette__favorite-color" data-property-name="--first-favorite-color"></button>
@@ -52,9 +51,9 @@
       </div>
       <div class="help__container">
         <ul class="help__list">
-          <li class="help__item">To change the color of screen – swipe left/right<span class="help__instructions--desktop"> or use left/right arrow keys</span></li>
-          <li class="help__item">To change the brightness – swipe up/down<span class="help__instructions--desktop"> or use up/down arrow keys</span></li>
-          <li class="help__item">To hide buttons – press one of them for 2 seconds (Buttons will remain active)</li>
+          <li class="help__item">To change the color of screen swipe left/right<span class="help__instructions--desktop"> or use left/right arrow keys</span></li>
+          <li class="help__item">To change the brightness swipe up/down<span class="help__instructions--desktop"> or use up/down arrow keys</span></li>
+          <li class="help__item">To hide buttons press one of them for 2 seconds (Buttons will remain active)</li>
         </ul>
       </div>
       <script src="js/script.js" async></script>

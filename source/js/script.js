@@ -11,12 +11,12 @@ let touchStartX;
 let touchStartY;
 let touchEndX;
 let touchEndY;
-let chosenFavoriteColor;
 let helpBtn = document.querySelector('.help__btn');
 let helpContainer = document.querySelector('.help__container');
 let paletteBtn = document.querySelector('.palette__btn');
 let paletteContainer = document.querySelector('.palette__container');
 let sliders = document.querySelectorAll('.palette__slider')
+let chosenFavoriteColor;
 let favoriteColorContainers = document.querySelectorAll('.palette__favorite-color')
 let btnHold;
 let isLongPress;
@@ -110,11 +110,13 @@ selectFavoriteColor = (element) => {
 toggleHelp = () => {
   paletteContainer.classList.remove('palette__container--show');
   helpContainer.classList.toggle('help__container--show');
+  chosenFavoriteColor = null;
 };
 
 togglePalette = () => {
   helpContainer.classList.remove('help__container--show');
   paletteContainer.classList.toggle('palette__container--show');
+  chosenFavoriteColor = null;
 }
 
 changeBtnsVisibility = () => {
@@ -138,6 +140,10 @@ btnReleased = (element) => {
     }
   };
 };
+
+touchEnded = () => {
+  clearTimeout(btnHold);
+}
 
 document.addEventListener('keydown', function(event) {
   switch (event.code) {
@@ -175,23 +181,35 @@ swipe = () => {
   }
 };
 
-document.addEventListener ('touchstart', function(event) {
+document.addEventListener('touchstart', function(event) {
   touchStartX = event.changedTouches[0].screenX;
   touchStartY = event.changedTouches[0].screenY;
 });
 
-document.addEventListener ('touchend', function(event) {
+document.addEventListener('touchend', function(event) {
   touchEndX = event.changedTouches[0].screenX;
   touchEndY = event.changedTouches[0].screenY;
   swipe();
 });
 
-helpBtn.addEventListener('mousedown', function(event) {
+document.querySelector('.palette__container').addEventListener('touchstart', function(event){
+  event.stopPropagation();
+});
+
+document.querySelector('.palette__container').addEventListener('touchend', function(event){
+  event.stopPropagation();
+});
+
+helpBtn.addEventListener('touchstart', function(event) {
   isLongPress = false;
   btnHold = setTimeout(changeBtnsVisibility, 1300);
 });
 
-helpBtn.addEventListener('touchstart', function(event) {
+helpBtn.addEventListener('touchend', function(event) {
+  touchEnded();
+});
+
+helpBtn.addEventListener('mousedown', function(event) {
   isLongPress = false;
   btnHold = setTimeout(changeBtnsVisibility, 1300);
 });
@@ -200,8 +218,13 @@ helpBtn.addEventListener('mouseup', function(event) {
   btnReleased(event.currentTarget);
 });
 
-helpBtn.addEventListener('touchend', function(event) {
-  btnReleased(event.currentTarget);
+paletteBtn.addEventListener('touchstart', function(event) {
+  isLongPress = false;
+  btnHold = setTimeout(changeBtnsVisibility, 1300);
+});
+
+paletteBtn.addEventListener('touchend', function(event) {
+  touchEnded();
 });
 
 paletteBtn.addEventListener('mousedown', function(event) {
@@ -209,16 +232,7 @@ paletteBtn.addEventListener('mousedown', function(event) {
   btnHold = setTimeout(changeBtnsVisibility, 1300);
 });
 
-paletteBtn.addEventListener('touchstart', function(event) {
-  isLongPress = false;
-  btnHold = setTimeout(changeBtnsVisibility, 1300);
-});
-
 paletteBtn.addEventListener('mouseup', function(event) {
-  btnReleased(event.currentTarget);
-});
-
-paletteBtn.addEventListener('touchend', function(event) {
   btnReleased(event.currentTarget);
 });
 
