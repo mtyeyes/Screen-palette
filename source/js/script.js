@@ -30,7 +30,7 @@ hslStringToArr = (str) => {
 };
 
 hslArrToString = (arr) => {
-  return 'hsl(' + arr[0] + ',' + arr[1] + '%,' + arr[2] + '%)';
+  return `hsl(${arr[0]},${arr[1]}%,${arr[2]}%)`
 };
 
 getCustomProperty = (propertyName) => {
