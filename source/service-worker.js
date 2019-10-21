@@ -7,8 +7,13 @@ let urlsToCache = [
 
 self.addEventListener('install', function(event) {
     event.waitUntil(
-      caches.open('app-cache').then(function(cache) {
+      caches.open(compilationTime).then(function(cache) {
         return cache.addAll(urlsToCache);
+      }),
+      caches.keys().then(function(cacheNames) {
+        cacheNames.forEach(function(cacheName) {
+          if (cacheName !== compilationTime) caches.delete(cacheName)
+        })
       })
     );
   });

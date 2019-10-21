@@ -7,17 +7,17 @@ if ('serviceWorker' in navigator) {
   });
 };
 
+const helpBtn = document.querySelector('.help__btn');
+const helpContainer = document.querySelector('.help__container');
+const paletteBtn = document.querySelector('.palette__btn');
+const paletteContainer = document.querySelector('.palette__container');
+const sliders = document.querySelectorAll('.palette__slider')
+const favoriteColorContainers = document.querySelectorAll('.palette__favorite-color')
 let touchStartX;
 let touchStartY;
 let touchEndX;
 let touchEndY;
-let helpBtn = document.querySelector('.help__btn');
-let helpContainer = document.querySelector('.help__container');
-let paletteBtn = document.querySelector('.palette__btn');
-let paletteContainer = document.querySelector('.palette__container');
-let sliders = document.querySelectorAll('.palette__slider')
 let chosenFavoriteColor;
-let favoriteColorContainers = document.querySelectorAll('.palette__favorite-color')
 let btnHold;
 let isLongPress;
 

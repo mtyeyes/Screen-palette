@@ -6,6 +6,8 @@ var csso = require("gulp-csso");
 var htmlmin = require("gulp-htmlmin");
 var del = require("del");
 var terser = require("gulp-terser");
+var header = require("gulp-header");
+var compilationTime = new Date();
 
 gulp.task("html", function () {
   return gulp.src("source/index.html")
@@ -29,10 +31,19 @@ gulp.task("clean", function (){
   return del("build");
 });
 
-gulp.task("scripts", function() {
-  return gulp.src(["source/js/script.js", "source/service-worker.js"], {
+gulp.task("script", function() {
+  return gulp.src("source/js/script.js", {
     base: "source"
   })
+  .pipe(terser())
+  .pipe(gulp.dest("build"));
+});
+
+gulp.task("worker", function() {
+  return gulp.src("source/service-worker.js", {
+    base: "source"
+  })
+  .pipe(header("const compilationTime='" + compilationTime.getMonth() + compilationTime.getDate() + compilationTime.getHours() + "';"))
   .pipe(terser())
   .pipe(gulp.dest("build"));
 });
@@ -46,6 +57,6 @@ gulp.task("copy", function (){
   .pipe(gulp.dest("build"));
 });
 
-gulp.task("build", gulp.series("clean", "copy", "css", "scripts", "html", "manifest"));
+gulp.task("build", gulp.series("clean", "copy", "css", "script", "worker", "html", "manifest"));
 
 gulp.task("start", gulp.series("build"));
