@@ -4,15 +4,15 @@
   "description": "PWA that makes you screen shine with all colors of rainbow",
   "devDependencies": {
     "@htmlacademy/editorconfig-cli": "1.x",
-    "del": "^3.0.0",
+    "del": "^5.1.0",
     "gulp": "4.0.x",
-    "gulp-csso": "^3.0.1",
+    "gulp-csso": "^4.0.1",
     "gulp-header": "^2.0.9",
     "gulp-htmlmin": "^5.0.1",
     "gulp-plumber": "1.2.x",
-    "gulp-uglify": "^3.0.1",
-    "stylelint": "9.6.x",
-    "stylelint-config-htmlacademy": "0.1.x"
+    "gulp-uglify": "^3.0.2",
+    "stylelint": "12.0.x",
+    "stylelint-config-htmlacademy": "^0.1.4"
   },
   "scripts": {
     "editorconfig": "editorconfig-cli",

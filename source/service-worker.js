@@ -1,22 +1,22 @@
 let urlsToCache = [
-  'index.html',
-  'manifest.json',
-  'css/style.css',
-  'js/script.js'
+  '/palette/',
+  '/palette/manifest.json',
+  '/palette/css/style.css',
+  '/palette/js/script.js'
 ]
 
 self.addEventListener('install', function(event) {
-    event.waitUntil(
-      caches.open(compilationTime).then(function(cache) {
-        return cache.addAll(urlsToCache);
-      }),
-      caches.keys().then(function(cacheNames) {
-        cacheNames.forEach(function(cacheName) {
-          if (cacheName !== compilationTime) caches.delete(cacheName)
-        })
+  event.waitUntil(
+    caches.open(uniqueSN).then(function(cache) {
+      return cache.addAll(urlsToCache);
+    }),
+    caches.keys().then(function(cacheNames) {
+      cacheNames.forEach(function(cacheName) {
+        if (cacheName !== uniqueSN) caches.delete(cacheName)
       })
-    );
-  });
+    })
+  );
+});
 
 self.addEventListener('fetch', function(event) {
   event.respondWith(

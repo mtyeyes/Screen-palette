@@ -43,7 +43,7 @@ gulp.task("worker", function() {
   return gulp.src("source/service-worker.js", {
     base: "source"
   })
-  .pipe(header("const compilationTime='" + compilationTime.getMonth() + compilationTime.getDate() + compilationTime.getHours() + "';"))
+  .pipe(header("const uniqueSN='" + compilationTime.getMonth() + compilationTime.getDate() + compilationTime.getHours() + Math.floor(Math.random()*1000) + "';"))
   .pipe(terser())
   .pipe(gulp.dest("build"));
 });
