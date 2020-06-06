@@ -21,16 +21,18 @@ let chosenFavoriteColor;
 let btnHold;
 let isLongPress;
 
-hslStringToArr = (str) => {
-  hslArr = str.split(',');
-  hslArr[0] = +(hslArr[0].replace('hsl(', ''));
-  hslArr[1] = +(hslArr[1].replace('%', ''));
-  hslArr[2] = +(hslArr[2].replace('%)', ''));
-  return hslArr;
-};
+hslNotationToValues = (str) => {
+    hslArr = str.split(',');
+    const hslValues = {
+      hue: +(hslArr[0].replace('hsl(', '')),
+      saturation: +(hslArr[1].replace('%', '')),
+      lightness: +(hslArr[2].replace('%)', '')),
+    };
+    return hslValues;
+}
 
-hslArrToString = (arr) => {
-  return `hsl(${arr[0]},${arr[1]}%,${arr[2]}%)`
+hslValuesToNotation = (hue, saturation, lightness) => {
+  return `hsl(${hue},${saturation}%,${lightness}%)`
 };
 
 getCustomProperty = (propertyName) => {
@@ -41,70 +43,58 @@ setCustomProperty = (propertyName, value) => {
   document.documentElement.style.setProperty(propertyName, value);
 };
 
-setScreenColor = (str, lightness) => {
-  setCustomProperty('--screen-light', str);
-  localStorage.setItem('--screen-light', str);
-  if (typeof lightness === "undefined") {let lightness = str.slice((str.lastIndexOf(",") + 1)).replace('%)', '')};
-  if (lightness <= 30) {
-    setCustomProperty('--secondary-color', 'hsl(0, 0%, 73%)');
-    localStorage.setItem('--secondary-color', 'hsl(0, 0%, 73%)');
-  } else {
-    setCustomProperty('--secondary-color', 'hsl(44, 10%, 13%)');
-    localStorage.setItem('--secondary-color', 'hsl(44, 10%, 13%)');
-  };
-};
+adjustColors = (hue, saturation, lightness) => {
+  setCustomProperty('--screen-light', hslValuesToNotation(hue, saturation, lightness));
+  localStorage.setItem('--screen-light', hslValuesToNotation(hue, saturation, lightness));
+  setCustomProperty('--hue-value', hslValuesToNotation(hue, 100, 60));
+  setCustomProperty('--lightness-value', hslValuesToNotation(0, 0, lightness));
+  setCustomProperty('--saturation-value', hslValuesToNotation(hue, saturation, 60));
+  if (lightness <= 30) {setCustomProperty('--secondary-color', hslValuesToNotation(0, 0, 73))} else {setCustomProperty('--secondary-color', hslValuesToNotation(44, 10, 13))};
+  synchronizeSliders(hue, saturation, lightness);
+}
 
-synchronizeSliders = (hslArr) => {
-  sliders[0].value = hslArr[0];
-  sliders[1].value = hslArr[1];
-  sliders[2].value = hslArr[2];
+synchronizeSliders = (hue, saturation, lightness) => {
+  sliders[0].value = hue;
+  sliders[1].value = saturation;
+  sliders[2].value = lightness;
 };
 
 changeHue = (difference) => {
-  hslArr = hslStringToArr(getCustomProperty('--screen-light'));
-  if ((hslArr[0] + difference) > 360) {
-    hslArr[0] = hslArr[0] + difference - 360;
-  } else if ((hslArr[0] + difference) < 0) {
-    hslArr[0] = hslArr[0] + difference + 360;
+  let {hue, saturation, lightness} = hslNotationToValues(getCustomProperty('--screen-light'));
+  if ((hue + difference) > 360) {
+    hue = hue + difference - 360;
+  } else if ((hue + difference) < 0) {
+    hue = hue + difference + 360;
   } else {
-    hslArr[0] = hslArr[0] + difference;
-  }
-  resultedColor = hslArrToString(hslArr);
-  setScreenColor(resultedColor, hslArr[2]);
-  synchronizeSliders(hslArr);
+    hue = hue + difference;
+  };
+  adjustColors(hue, saturation, lightness);
 };
 
 changeLightness = (difference) => {
-  hslArr = hslStringToArr(getCustomProperty('--screen-light'));
-  if (((hslArr[2] + difference) > 100) || ((hslArr[2] + difference) < 0)) {
+  let {hue, saturation, lightness} = hslNotationToValues(getCustomProperty('--screen-light'));
+  if (((lightness + difference) > 100) || ((lightness + difference) < 0)) {
     return
   } else {
-    hslArr[2] = hslArr[2] + difference;
+    lightness = lightness + difference;
   };
-  resultedColor = hslArrToString(hslArr);
-  setScreenColor(resultedColor, hslArr[2]);
-  synchronizeSliders(hslArr);
+  adjustColors(hue, saturation, lightness);
 };
 
 adjustColorsBySlider = () => {
-  let hslArr = [];
-  hslArr[0] = sliders[0].value;
-  hslArr[1] = sliders[1].value;
-  hslArr[2] = sliders[2].value;
-  resultedColor = hslArrToString(hslArr);
-  setScreenColor(resultedColor, hslArr[2]);
+  const [hue, saturation, lightness] = [sliders[0].value, sliders[1].value, sliders[2].value]
+  adjustColors(hue, saturation, lightness);
   if (chosenFavoriteColor) {
-    setCustomProperty(chosenFavoriteColor, resultedColor)
-    localStorage.setItem(chosenFavoriteColor, resultedColor);
+    setCustomProperty(chosenFavoriteColor, hslValuesToNotation(hue, saturation, lightness));
+    localStorage.setItem(chosenFavoriteColor, hslValuesToNotation(hue, saturation, lightness));
   };
 };
 
 selectFavoriteColor = (element) => {
-  let hslString = getCustomProperty(element.dataset.propertyName);
-  let hslArr = hslStringToArr(hslString);
-  setScreenColor(hslString, hslArr[2]);
-  synchronizeSliders(hslArr);
-  chosenFavoriteColor = element.dataset.propertyName;
+  const favoriteColorNumber = element.dataset.propertyName;
+  const {hue, saturation, lightness} = hslNotationToValues(getCustomProperty(favoriteColorNumber));
+  adjustColors(hue, saturation, lightness);
+  chosenFavoriteColor = favoriteColorNumber;
 }
 
 toggleHelp = () => {
@@ -255,10 +245,8 @@ for (let element of favoriteColorContainers) {
 
 ( function() {
   if (localStorage.getItem('--screen-light')) {
-    setCustomProperty('--screen-light', localStorage.getItem('--screen-light'));
-    setCustomProperty('--secondary-color', localStorage.getItem('--secondary-color'));
-    let hslArr = hslStringToArr(localStorage.getItem('--screen-light'));
-    synchronizeSliders(hslArr);
+    let {hue, saturation, lightness} = hslNotationToValues(localStorage.getItem('--screen-light'));
+    adjustColors(hue, saturation, lightness);
   };
   if (localStorage.getItem('hide-btns')) {
     document.querySelector('.help__icon').classList.add('help__icon--hide');
