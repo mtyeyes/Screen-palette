@@ -1,62 +1,82 @@
-"use strict";
+const gulp = require("gulp");
+const plumber = require("gulp-plumber");
+const csso = require("gulp-csso");
+const htmlmin = require("gulp-htmlmin");
+const del = require("del");
+const terser = require("gulp-terser");
+const header = require("gulp-header");
+const compilationTime = new Date();
 
-var gulp = require("gulp");
-var plumber = require("gulp-plumber");
-var csso = require("gulp-csso");
-var htmlmin = require("gulp-htmlmin");
-var del = require("del");
-var terser = require("gulp-terser");
-var header = require("gulp-header");
-var compilationTime = new Date();
-
-gulp.task("html", function () {
+const html = () => {
   return gulp.src("source/index.html")
   .pipe(htmlmin({ collapseWhitespace: true }))
   .pipe(gulp.dest("build"));
-});
+};
 
-gulp.task("manifest", function () {
+exports.html = html;
+
+const manifest = () => {
   return gulp.src("source/manifest.json")
   .pipe(gulp.dest("build"));
-});
+};
 
-gulp.task("css", function () {
+exports.manifest = manifest;
+
+const css = () => {
   return gulp.src("source/css/style.css")
   .pipe(plumber())
   .pipe(csso())
-  .pipe(gulp.dest("build/css"))
-});
+  .pipe(gulp.dest("build/css"));
+};
 
-gulp.task("clean", function (){
+exports.css = css;
+
+const clean = () => {
   return del("build");
-});
+};
 
-gulp.task("script", function() {
+exports.clean = clean;
+
+const script = () => {
   return gulp.src("source/js/script.js", {
     base: "source"
   })
   .pipe(terser())
   .pipe(gulp.dest("build"));
-});
+};
 
-gulp.task("worker", function() {
+exports.script = script;
+
+const worker = () => {
   return gulp.src("source/service-worker.js", {
     base: "source"
   })
-  .pipe(header("const uniqueSN='" + compilationTime.getMonth() + compilationTime.getDate() + compilationTime.getHours() + Math.floor(Math.random()*1000) + "';"))
+  .pipe(header("const uniqueSN='" + compilationTime.getMonth() + compilationTime.getDate() + compilationTime.getHours() + Math.floor(Math.random()*100) + "';"))
   .pipe(terser())
   .pipe(gulp.dest("build"));
-});
+};
 
-gulp.task("copy", function (){
+exports.worker = worker;
+
+const copy = () => {
   return gulp.src([
     "source/img/*.*"
   ], {
     base: "source"
   })
   .pipe(gulp.dest("build"));
-});
+};
 
-gulp.task("build", gulp.series("clean", "copy", "css", "script", "worker", "html", "manifest"));
+exports.copy = copy;
 
-gulp.task("start", gulp.series("build"));
+exports.default = gulp.series(
+  clean,
+  gulp.parallel(
+    copy,
+    html,
+    css,
+    script,
+    worker,
+    manifest,
+  ),
+);

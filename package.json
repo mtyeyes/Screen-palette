@@ -1,25 +1,21 @@
 {
-  "name": "palette",
-  "version": "1.0.0",
-  "description": "PWA that makes you screen shine with all colors of rainbow",
+  "private": true,
   "devDependencies": {
-    "@htmlacademy/editorconfig-cli": "1.x",
+    "@htmlacademy/editorconfig-cli": "1.0.0",
     "del": "^5.1.0",
-    "gulp": "4.0.x",
+    "gulp": "4.0.2",
     "gulp-csso": "^4.0.1",
     "gulp-header": "^2.0.9",
     "gulp-htmlmin": "^5.0.1",
-    "gulp-plumber": "1.2.x",
+    "gulp-plumber": "1.2.1",
     "gulp-uglify": "^3.0.2",
-    "stylelint": "12.0.x",
+    "stylelint": "13.6.0",
     "stylelint-config-htmlacademy": "^0.1.4"
   },
   "scripts": {
     "editorconfig": "editorconfig-cli",
     "stylelint": "stylelint",
-    "test": "npm run editorconfig && npm run stylelint",
-    "build": "gulp build",
-    "start": "gulp start"
+    "start": "gulp"
   },
   "editorconfig-cli": [
     "*.json",
