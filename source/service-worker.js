@@ -1,8 +1,8 @@
 let urlsToCache = [
-  '/palette/',
-  '/palette/manifest.json',
-  '/palette/css/style.css',
-  '/palette/js/script.js'
+  '/screen-palette/',
+  '/screen-palette/manifest.json',
+  '/screen-palette/css/style.css',
+  '/screen-palette/js/script.js'
 ]
 
 self.addEventListener('install', function(event) {

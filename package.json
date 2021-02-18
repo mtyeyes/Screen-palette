@@ -17,7 +17,7 @@
     "editorconfig": "editorconfig-cli",
     "stylelint": "stylelint",
     "start": "gulp",
-    "predeploy": "npm run build",
+    "predeploy": "npm start",
     "deploy": "gh-pages -d build"
   },
   "editorconfig-cli": [
