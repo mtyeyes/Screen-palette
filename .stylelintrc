@@ -1,6 +1,4 @@
 {
-  "extends": "stylelint-config-htmlacademy",
-
   "rules": {
     "declaration-no-important": true,
     "property-no-vendor-prefix": [true, { "ignoreProperties": ["appearance"]}],

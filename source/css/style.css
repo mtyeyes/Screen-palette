@@ -4,7 +4,22 @@
   --hue-value: hsl(210, 100%, 60%);
   --saturation-value: hsl(210, 100%, 60%);
   --lightness-value: hsl(0, 0%, 60%);
-  --hue-range: linear-gradient(to right, hsl(0, 100%, 50%), hsl(30, 100%, 50%), hsl(60, 100%, 50%), hsl(90, 100%, 50%), hsl(120, 100%, 50%), hsl(150, 100%, 50%), hsl(180, 100%, 50%), hsl(210, 100%, 50%), hsl(240, 100%, 50%), hsl(270, 100%, 50%), hsl(300, 100%, 50%), hsl(330, 100%, 50%), hsl(360, 100%, 50%));
+  --hue-range: linear-gradient(
+    to right,
+    hsl(0, 100%, 50%),
+    hsl(30, 100%, 50%),
+    hsl(60, 100%, 50%),
+    hsl(90, 100%, 50%),
+    hsl(120, 100%, 50%),
+    hsl(150, 100%, 50%),
+    hsl(180, 100%, 50%),
+    hsl(210, 100%, 50%),
+    hsl(240, 100%, 50%),
+    hsl(270, 100%, 50%),
+    hsl(300, 100%, 50%),
+    hsl(330, 100%, 50%),
+    hsl(360, 100%, 50%)
+  );
   --first-favorite-color: hsl(150, 100%, 60%);
   --second-favorite-color: hsl(360, 80%, 30%);
   --third-favorite-color: hsl(270, 100%, 60%);
@@ -37,7 +52,11 @@
 .palette__favorite-color:active,
 .palette__btn:active,
 .help__btn:active {
-  background-image: radial-gradient(circle at center, hsl(0, 0%, 73%, 1) 0%, var(--screen-light) 70%);
+  background-image: radial-gradient(
+    circle at center,
+    hsl(0, 0%, 73%, 1) 0%,
+    var(--screen-light) 70%
+  );
   outline: none;
 }
 
@@ -178,7 +197,6 @@
 .palette__slider:focus::-webkit-slider-runnable-track {
   background: var(--secondary-color);
 }
-
 
 .palette__slider--hue::-moz-range-track {
   background: var(--hue-range);

@@ -1,7 +1,6 @@
 {
   "private": true,
   "devDependencies": {
-    "@htmlacademy/editorconfig-cli": "1.0.0",
     "del": "^5.1.0",
     "gh-pages": "^3.1.0",
     "gulp": "4.0.2",
@@ -10,11 +9,11 @@
     "gulp-htmlmin": "^5.0.1",
     "gulp-plumber": "1.2.1",
     "gulp-uglify": "^3.0.2",
-    "stylelint": "13.6.0",
-    "stylelint-config-htmlacademy": "^0.1.4"
+    "prettier": "^2.2.1",
+    "stylelint": "13.6.0"
   },
   "scripts": {
-    "editorconfig": "editorconfig-cli",
+    "format": "prettier --config .prettierrc \"**/*.+(js|json|css)\" --write",
     "stylelint": "stylelint",
     "start": "gulp",
     "predeploy": "npm start",
